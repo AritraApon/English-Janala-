@@ -5,12 +5,26 @@ const loadLesson = () => {
         .then(json => displayLesson(json.data))
 }
 
+// remove active class function 
+const removeActive = () =>{
+    const lessonBtn = document.querySelectorAll(".lesson_btn");
+    lessonBtn.forEach(btn => btn.classList.remove('active'))
+}
+
+
+
 // word ...
 const loadLessonWord = (id) => {
     const url = `https://openapi.programming-hero.com/api/level/${id}`;
     fetch(url)
         .then(res => res.json())
-        .then(wordData => displayWord(wordData.data))
+        .then((wordData) =>{
+            removeActive ()  // remove active class
+         const clickBtn = document.getElementById(`lessonBtn-${id}`)
+         clickBtn.classList.add('active') // add active class
+
+            displayWord(wordData.data)
+        } )
 }
 
 const displayWord = (words) => {
@@ -48,7 +62,8 @@ const displayWord = (words) => {
             <!-- button ........... -->
             <div class="flex justify-between">
                 <button class="btn bg-[#e8f4ff] hover:bg-[#81bdf6]"><i class="fa-solid fa-circle-info"></i></button>
-                <button class="btn bg-[#e8f4ff] hover:bg-[#81bdf6]"><i class="fa-solid fa-circle-info"></i></button>
+                <button class="btn bg-[#e8f4ff] hover:bg-[#81bdf6]">
+                <i class="fa-solid fa-volume-high"></i></button>
 
             </div>
         </div>
@@ -72,8 +87,9 @@ const displayLesson = (lessons) => {
         // crate a new button div
         const btnDiv = document.createElement('div');
         btnDiv.innerHTML = `
-         <button  onclick="loadLessonWord(${lesson.level_no})" class="btn  btn-outline btn-primary">
-                            <img src="./assets/fa-book-open.png" alt="#">
+         <button id="lessonBtn-${lesson.level_no}"
+          onclick="loadLessonWord(${lesson.level_no})" class="lesson_btn   btn  btn-outline btn-primary">
+                            <i class="fa-solid fa-book-open"></i>
                             Lesson-${lesson.level_no}
                             </button>
     `
