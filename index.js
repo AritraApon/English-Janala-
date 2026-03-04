@@ -4,21 +4,21 @@ const createElement = (arr) => {
 }
 
 function pronounceWord(word) {
-  if (!word) return;
+    if (!word) return;
 
-  // আগের ভয়েস বন্ধ করে দাও
-  window.speechSynthesis.cancel();
 
-  const utterance = new SpeechSynthesisUtterance(word);
-  utterance.lang = "en-US"; // সঠিক locale
-  utterance.rate = 1;       // স্পিড (0.5 - 2)
-  utterance.pitch = 1;      // টোন (0 - 2)
+    window.speechSynthesis.cancel();
 
-  // ভয়েস লোড হওয়ার পর চালাও
-  utterance.onstart = () => console.log("Speaking started...");
-  utterance.onend = () => console.log("Speaking finished.");
+    const utterance = new SpeechSynthesisUtterance(word);
+    utterance.lang = "en-US";
+    utterance.rate = 1;
+    utterance.pitch = 1;
 
-  window.speechSynthesis.speak(utterance);
+
+    utterance.onstart = () => console.log("Speaking started...");
+    utterance.onend = () => console.log("Speaking finished.");
+
+    window.speechSynthesis.speak(utterance);
 
 }
 
@@ -148,8 +148,8 @@ const displayWord = (words) => {
 
             <!-- button ........... -->
             <div class="flex justify-between">
-                <button onclick="loadWordDetail(${word.id})"  
-                
+                <button onclick="loadWordDetail(${word.id})"
+
                 class="btn bg-[#e8f4ff] hover:bg-[#81bdf6]"><i class="fa-solid fa-circle-info"></i></button>
                 <button class="btn bg-[#e8f4ff] hover:bg-[#81bdf6]">
                 <i onclick="pronounceWord('${word.word}')" class="fa-solid fa-volume-high"></i></button>
@@ -165,6 +165,15 @@ const displayWord = (words) => {
     });
     manageSpinner(false);
 }
+
+
+
+
+
+
+
+
+
 
 //  lesson button >>>>>......
 const displayLesson = (lessons) => {
@@ -194,8 +203,8 @@ loadLesson()
 
 
 document.getElementById("btn_search").addEventListener("click", () => {
-    removeActive ()
-      const input = document.getElementById("input_search");
+    removeActive()
+    const input = document.getElementById("input_search");
     const searchValue = input.value.trim().toLowerCase();
 
     fetch("https://openapi.programming-hero.com/api/words/all")
@@ -206,7 +215,7 @@ document.getElementById("btn_search").addEventListener("click", () => {
             const filterWords = allWords.filter((w) =>
                 w.word && w.word.toLowerCase().includes(searchValue)
             );
-        displayWord(filterWords);
+            displayWord(filterWords);
         })
 
 })
