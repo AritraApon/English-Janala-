@@ -6,7 +6,7 @@ const createElement = (arr) => {
 const manageSpinner = (status) => {
     if (status === true) {
         document.getElementById('spinner').classList.remove('hidden');
-     
+
         document.getElementById('word_container').classList.add('hidden')
     } else {
         document.getElementById('word_container').classList.remove('hidden');
@@ -108,7 +108,7 @@ const displayWord = (words) => {
         </div>
 
      `
-       manageSpinner(f)
+        manageSpinner(false)
         return
 
     }
@@ -171,3 +171,22 @@ const displayLesson = (lessons) => {
 }
 
 loadLesson()
+
+
+document.getElementById("btn_search").addEventListener("click", () => {
+    removeActive ()
+      const input = document.getElementById("input_search");
+    const searchValue = input.value.trim().toLowerCase();
+
+    fetch("https://openapi.programming-hero.com/api/words/all")
+        .then(res => res.json())
+        .then(data => {
+            const allWords = data.data;
+            // Only filter items that actually have a 'word' property
+            const filterWords = allWords.filter((w) =>
+                w.word && w.word.toLowerCase().includes(searchValue)
+            );
+        displayWord(filterWords);
+        })
+
+})
