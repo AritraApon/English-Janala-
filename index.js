@@ -3,6 +3,13 @@ const createElement = (arr) => {
     return htmlElement.join(" ")
 }
 
+function pronounceWord(word) {
+  const utterance = new SpeechSynthesisUtterance(word);
+  utterance.lang = "en-EN"; // English
+  window.speechSynthesis.speak(utterance);
+}
+
+
 const manageSpinner = (status) => {
     if (status === true) {
         document.getElementById('spinner').classList.remove('hidden');
@@ -132,7 +139,7 @@ const displayWord = (words) => {
                 
                 class="btn bg-[#e8f4ff] hover:bg-[#81bdf6]"><i class="fa-solid fa-circle-info"></i></button>
                 <button class="btn bg-[#e8f4ff] hover:bg-[#81bdf6]">
-                <i class="fa-solid fa-volume-high"></i></button>
+                <i onclick="pronounceWord('${word.word}')" class="fa-solid fa-volume-high"></i></button>
 
             </div>
         </div>
