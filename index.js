@@ -1,9 +1,19 @@
-const createElement= (arr) => {
-    const htmlElement = arr.map((el)=> `  <p class="bg-blue-100 px-3 py-2 rounded-lg font-medium ">${el} </p>`)
+const createElement = (arr) => {
+    const htmlElement = arr.map((el) => `  <p class="bg-blue-100 px-3 py-2 rounded-lg font-medium ">${el} </p>`)
     return htmlElement.join(" ")
 }
 
+const manageSpinner = (status) => {
+    if (status === true) {
+        document.getElementById('spinner').classList.remove('hidden');
+     
+        document.getElementById('word_container').classList.add('hidden')
+    } else {
+        document.getElementById('word_container').classList.remove('hidden');
 
+        document.getElementById('spinner').classList.add('hidden')
+    }
+}
 
 
 
@@ -24,6 +34,7 @@ const removeActive = () => {
 
 // word ... load
 const loadLessonWord = (id) => {
+    manageSpinner(true);
     const url = `https://openapi.programming-hero.com/api/level/${id}`;
     fetch(url)
         .then(res => res.json())
@@ -37,6 +48,7 @@ const loadLessonWord = (id) => {
 }
 // load details ..............>>>>>>>>>>>>
 const loadWordDetail = async (id) => {
+
     const url = `https://openapi.programming-hero.com/api/word/${id}`;
 
     const res = await fetch(url)
@@ -69,7 +81,7 @@ const displayWordDetails = (word) => {
                         <p class="font-medium text-xl md:text-2xl font-bangla">সমার্থক শব্দ গুলো</p>
                         <div class="flex flex-col md:flex-row gap-5">
                            
-                           ${ createElement(word.synonyms ? word.synonyms : ' অর্থ মেলেনি ')}
+                           ${createElement(word.synonyms ? word.synonyms : ' অর্থ মেলেনি ')}
                         </div>
                     </div>
                 </div>
@@ -81,6 +93,7 @@ const displayWordDetails = (word) => {
 
 // display word ------------------------->>>>>>>
 const displayWord = (words) => {
+
     const wordContainer = document.getElementById("word_container");
     wordContainer.innerHTML = '';
 
@@ -95,7 +108,9 @@ const displayWord = (words) => {
         </div>
 
      `
+       manageSpinner(f)
         return
+
     }
 
 
@@ -126,7 +141,9 @@ const displayWord = (words) => {
 
 
         wordContainer.appendChild(wordDiv)
+
     });
+    manageSpinner(false);
 }
 
 //  lesson button >>>>>......
