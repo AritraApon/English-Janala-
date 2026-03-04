@@ -4,9 +4,22 @@ const createElement = (arr) => {
 }
 
 function pronounceWord(word) {
+  if (!word) return;
+
+  // আগের ভয়েস বন্ধ করে দাও
+  window.speechSynthesis.cancel();
+
   const utterance = new SpeechSynthesisUtterance(word);
-  utterance.lang = "en-EN"; // English
+  utterance.lang = "en-US"; // সঠিক locale
+  utterance.rate = 1;       // স্পিড (0.5 - 2)
+  utterance.pitch = 1;      // টোন (0 - 2)
+
+  // ভয়েস লোড হওয়ার পর চালাও
+  utterance.onstart = () => console.log("Speaking started...");
+  utterance.onend = () => console.log("Speaking finished.");
+
   window.speechSynthesis.speak(utterance);
+
 }
 
 
