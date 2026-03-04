@@ -1,3 +1,12 @@
+const createElement= (arr) => {
+    const htmlElement = arr.map((el)=> `  <p class="bg-blue-100 px-3 py-2 rounded-lg font-medium ">${el} </p>`)
+    return htmlElement.join(" ")
+}
+
+
+
+
+
 //  All Levels data
 const loadLesson = () => {
     fetch("https://openapi.programming-hero.com/api/levels/all")
@@ -5,28 +14,72 @@ const loadLesson = () => {
         .then(json => displayLesson(json.data))
 }
 
-// remove active class function 
-const removeActive = () =>{
+// remove active class function
+const removeActive = () => {
     const lessonBtn = document.querySelectorAll(".lesson_btn");
     lessonBtn.forEach(btn => btn.classList.remove('active'))
 }
 
 
 
-// word ...
+// word ... load
 const loadLessonWord = (id) => {
     const url = `https://openapi.programming-hero.com/api/level/${id}`;
     fetch(url)
         .then(res => res.json())
-        .then((wordData) =>{
-            removeActive ()  // remove active class
-         const clickBtn = document.getElementById(`lessonBtn-${id}`)
-         clickBtn.classList.add('active') // add active class
+        .then((wordData) => {
+            removeActive()  // remove active class
+            const clickBtn = document.getElementById(`lessonBtn-${id}`)
+            clickBtn.classList.add('active') // add active class
 
             displayWord(wordData.data)
-        } )
+        })
+}
+// load details ..............>>>>>>>>>>>>
+const loadWordDetail = async (id) => {
+    const url = `https://openapi.programming-hero.com/api/word/${id}`;
+
+    const res = await fetch(url)
+    const details = await res.json();
+    displayWordDetails(details.data)
 }
 
+
+// display details
+const displayWordDetails = (word) => {
+    console.log(word)
+    const detailsBox = document.getElementById("details_container")
+    detailsBox.innerHTML = `
+      <div class="space-y-10 py-4 px-5 border-2 border-[#1616f61f]">
+                    <div>
+                        <h2 class="font-semibold text-2xl md:text-4xl">${word.word ? word.word : "শব্দ পাওয়া যায়নি"} (<i
+                                class="fa-solid fa-microphone-lines"></i>:${word.pronunciation ? word.pronunciation : 'শব্দ পাওয়া যায়নি'})</h2>
+                    </div>
+                    <div class="space-y-3">
+                        <p class="font-semibold text-xl md:text-2xl">Meaning</p>
+                        <p class="font-medium text-xl md:text-2xl font-bangla">${word.meaning ? word.meaning : 'অর্থ খুঁজে পাওয়া যায়নি '} </p>
+                    </div>
+                    <div class="space-y-3">
+                        <p class="font-semibold text-xl md:text-2xl">Example</p>
+                        <p class=" text-[16px]  md:text-xl ">
+                       ${word.sentence ? word.sentence : 'কোন বাক্য খুঁজে পাওয়া যায়নি '}
+                        </p>
+                    </div>
+                    <div class="space-y-3">
+                        <p class="font-medium text-xl md:text-2xl font-bangla">সমার্থক শব্দ গুলো</p>
+                        <div class="flex flex-col md:flex-row gap-5">
+                           
+                           ${ createElement(word.synonyms ? word.synonyms : ' অর্থ মেলেনি ')}
+                        </div>
+                    </div>
+                </div>
+
+    `
+    document.getElementById("my_modal_5").showModal();
+}
+
+
+// display word ------------------------->>>>>>>
 const displayWord = (words) => {
     const wordContainer = document.getElementById("word_container");
     wordContainer.innerHTML = '';
@@ -49,19 +102,20 @@ const displayWord = (words) => {
 
     words.forEach(word => {
         //    console.log(word)
-
         //  create new word div
         const wordDiv = document.createElement("div");
         wordDiv.innerHTML = `
          <div class="bg-white py-10 px-5 text-center rounded-xl shadow space-y-4">
-            <h2 class="font-bold text-xl md:text-2xl"> ${word.word ? word.word:'কোন শব্দ পাওয়া যায়নি '}  </h2>
+            <h2 class="font-bold text-xl md:text-2xl"> ${word.word ? word.word : 'কোন শব্দ পাওয়া যায়নি '}  </h2>
             <p class="font-semibold ">Meaning /Pronunciation</p>
             <div class="font-medium text-xl md:text-2xl font-bangla">"${word.meaning ? word.meaning : 'অর্থ খুঁজে পাওয়া যায়নি '} /
              ${word.pronunciation ? word.pronunciation : 'অর্থ খুঁজে পাওয়া যায়নি '} "</div>
 
             <!-- button ........... -->
             <div class="flex justify-between">
-                <button class="btn bg-[#e8f4ff] hover:bg-[#81bdf6]"><i class="fa-solid fa-circle-info"></i></button>
+                <button onclick="loadWordDetail(${word.id})"  
+                
+                class="btn bg-[#e8f4ff] hover:bg-[#81bdf6]"><i class="fa-solid fa-circle-info"></i></button>
                 <button class="btn bg-[#e8f4ff] hover:bg-[#81bdf6]">
                 <i class="fa-solid fa-volume-high"></i></button>
 
@@ -75,7 +129,7 @@ const displayWord = (words) => {
     });
 }
 
-// button >>>>>......
+//  lesson button >>>>>......
 const displayLesson = (lessons) => {
 
     const lessonContainer = document.getElementById("lesson_container");
